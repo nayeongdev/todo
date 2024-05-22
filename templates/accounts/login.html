@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="auth-main">
+    <div class="auth_div">
+      <div class="card">
+        <div class="body">
+          <p class="lead">계정에 로그인하세요</p>
+          <form class="form-auth-small m-t-20" action="" method="post">
+            {% csrf_token %}
+            <ul class="login-inputs">
+              <li class="mb-3">
+                <p>이메일</p>
+                {{ form.username }}
+              </li>
+              <li>
+                <p>비밀번호</p>
+                {{ form.password }}
+              </li>
+            </ul>
+            {% include "accounts/form_errors.html" %}
+            <!-- <div class="form-group clearfix">
+                <label class="fancy-checkbox element-left">
+                    <input type="checkbox">
+                    <span>계정 기억하기</span>
+                </label>
+            </div> -->
+            <button type="submit" class="btn btn-primary btn-round btn-block">로그인</button>
+            <div class="bottom">
+              <!-- <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a
+                      href="#">비밀번호를 잊으셨나요?</a></span> -->
+              <!--<span>Don't have an account? <a href="page-register.html">계정 가입</a></span>-->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
