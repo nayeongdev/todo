@@ -8,5 +8,5 @@ app_name = 'accounts'
 urlpatterns = [
     path('login/', views.SigninView.as_view(), name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('<str:username>/', views.profile, name='profile'),
+    path('profile/<str:username>/', views.profile, name='profile'),
 ]
