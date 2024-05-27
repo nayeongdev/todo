@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+  db:
+    container_name: mysql
+    image: mysql:8.0.23
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: 'todo'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+      TZ: Asia/Seoul
+    volumes:
+      - ./data/mysql/db:/var/lib/mysql
+  backend:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - env/.env.dev
+    depends_on:
+      - db
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A config worker --loglevel=INFO
+    volumes:
+      - .:/usr/src/app/
+    container_name: celery
+    depends_on:
+      - db
+      - redis
+      - backend
