@@ -33,6 +33,8 @@ services:
     volumes:
       - .:/usr/src/app/
     container_name: celery
+    env_file:
+      - env/.env.dev
     depends_on:
       - db
       - redis

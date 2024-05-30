@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
@@ -7,6 +8,7 @@ INTERVAL_CHOICES = [
     ('daily', 'Daily'),
     ('weekly', 'Weekly'),
     ('monthly', 'Monthly'),
+    (None, 'None')
 ]
 
 
@@ -34,6 +36,10 @@ class Todo(models.Model):
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
+    def clean(self):
+        if self.start_date and self.end_date and self.start_date > self.end_date:
+            raise ValidationError('End date must be after start date.')
+
     def __str__(self):
         return self.title
 
@@ -52,4 +58,4 @@ class Task(models.Model):
     updated_at = models.DateField(auto_now=True)
 
     def __str__(self):
-        return f"{self.todo.title} | {self.title}"
+        return f"{self.todo} | {self.title}"
