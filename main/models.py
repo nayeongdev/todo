@@ -59,3 +59,10 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.todo} | {self.title}"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_checked = models.BooleanField(default=False)
+    created_at = models.DateField(auto_now_add=True)
