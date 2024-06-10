@@ -5,7 +5,7 @@
       <ul class="col">
         <h3>TODO</h3>
         <button type="button" class="btn btn-outline-primary" id="todoAdd">추가하기</button>
-        {% for todo in todo_list %}
+        {% for todo in todos %}
           <li>
             <ul class="todo">
               <li>{{ todo.title }}</li>
@@ -14,10 +14,11 @@
             </ul>
           </li>
         {% endfor %}
+        {% include "pagination.html" with page=todos %}
       </ul>
       <ul class="col">
         <h3>TASK</h3>
-        {% for task in task_list %}
+        {% for task in tasks %}
           <li>
             <ul class="task">
               <li>{{ task.title }}</li>
@@ -26,6 +27,7 @@
             </ul>
           </li>
         {% endfor %}
+        {% include "pagination.html" with page=tasks %}
       </ul>
     </div>
   {% else %}

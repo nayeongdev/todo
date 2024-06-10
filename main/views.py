@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.views.generic import CreateView
 
@@ -12,9 +13,18 @@ def home(request):
         todo_list = Todo.objects.filter(user=request.user)
         task_list = Task.objects.filter(user=request.user)
 
+    todo_paginator = Paginator(todo_list, 5)
+    task_paginator = Paginator(task_list, 5)
+
+    todo_page_number = request.GET.get('todo_page', 1)
+    task_page_number = request.GET.get('task_page', 1)
+
+    todos = todo_paginator.page(todo_page_number)
+    tasks = task_paginator.page(task_page_number)
+
     context = {
-        'todo_list': todo_list,
-        'task_list': task_list,
+        'todos': todos,
+        'tasks': tasks,
     }
 
     return render(request, 'main/home.html', context)
