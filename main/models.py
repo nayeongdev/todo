@@ -4,13 +4,6 @@ from django.urls import reverse
 
 from accounts.models import User
 
-INTERVAL_CHOICES = [
-    ('daily', 'Daily'),
-    ('weekly', 'Weekly'),
-    ('monthly', 'Monthly'),
-    (None, 'None')
-]
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -24,6 +17,11 @@ class Category(models.Model):
 
 
 class Todo(models.Model):
+    class Interval(models.TextChoices):
+        DAILY = 'D', 'Daily'
+        WEEKLY = 'W', 'Weekly'
+        MONTHLY = 'M', 'Monthly'
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=100)
@@ -31,10 +29,13 @@ class Todo(models.Model):
     priority = models.IntegerField(default=0)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    interval = models.CharField(max_length=20, choices=INTERVAL_CHOICES, null=True, blank=True)
+    interval = models.CharField(max_length=2, choices=Interval.choices, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:
@@ -56,6 +57,9 @@ class Task(models.Model):
     description = models.TextField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.todo} | {self.title}"
