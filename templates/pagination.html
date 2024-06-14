@@ -1,11 +1,13 @@
 <div class="pagination">
   <span class="step-links">
     {% if page.has_previous %}
-      <a href="?page={{ page.previous_page_number }}">Previous</a>
+      <a href="?{% for key, value in request.GET.items %}{% if key != page_param %}{{ key }}={{ value }}&{% endif %}{% endfor %}{{ page_param }}={{ page.previous_page_number }}">Previous</a>
     {% endif %}
+
     <span class="current">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+
     {% if page.has_next %}
-      <a href="?page={{ page.next_page_number }}">Next</a>
+      <a href="?{% for key, value in request.GET.items %}{% if key != page_param %}{{ key }}={{ value }}&{% endif %}{% endfor %}{{ page_param }}={{ page.next_page_number }}">Next</a>
     {% endif %}
   </span>
 </div>
