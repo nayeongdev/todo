@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   {% if user.is_authenticated %}
+    <div id="notification"></div>
     <div class="row">
       <ul class="col">
         <h3>TODO</h3>
@@ -8,26 +9,36 @@
         {% for todo in todos %}
           <li>
             <ul class="todo">
-              <li>{{ todo.title }}</li>
-              <li>{{ todo.done }}</li>
-              <li>{{ todo.priority }}</li>
+              <li><strong>{{ todo.title }}</strong>
+                <span>
+                  <a href="{% url 'main:todo_delete' todo.pk %}"><i class="bi bi-trash"></i></a>
+                  <a href="{% url 'main:todo_update' todo.pk %}"><i class="bi bi-pencil-square"></i></a>
+                </span>
+              </li>
+              <li>{% if todo.done %}완료{% else %}해야함{% endif %}</li>
+              <li>{{ todo.priority }} 순위</li>
             </ul>
           </li>
         {% endfor %}
-        {% include "pagination.html" with page=todos %}
+        {% include "pagination.html" with page=todos page_param='todo' %}
       </ul>
       <ul class="col">
         <h3>TASK</h3>
         {% for task in tasks %}
           <li>
             <ul class="task">
-              <li>{{ task.title }}</li>
-              <li>{{ task.done }}</li>
-              <li>{{ task.priority }}</li>
+              <li><strong>{{ task.title }}</strong>
+                <span>
+                  <a href="{% url 'main:task_delete' task.pk %}"><i class="bi bi-trash"></i></a>
+                  <a href="{% url 'main:task_update' task.pk %}"><i class="bi bi-pencil-square"></i></a>
+                </span>
+              </li>
+              <li>{% if todo.done %}완료{% else %}해야함{% endif %}</li>
+              <li>{{ task.priority }} 순위</li>
             </ul>
           </li>
         {% endfor %}
-        {% include "pagination.html" with page=tasks %}
+        {% include "pagination.html" with page=tasks page_param='task' %}
       </ul>
     </div>
   {% else %}
@@ -46,8 +57,31 @@
 {% endblock content %}
 {% block script %}
   <script>
-    document.getElementById('todoAdd').addEventListener('click', () => {
-        window.location.href = {% url 'main:todo_create' %};
-    })
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function redirectToUrl(url) {
+      window.location.href = url;
+    }
+
+    function clickRedirectToUrl(elementId, url) {
+      document.getElementById(elementId).addEventListener('click', () => {
+        redirectToUrl(url);
+      });
+    }
+
+    clickRedirectToUrl('todoAdd', {% url 'main:todo_create' %});
+
+    window.onload = function () {
+      const savedNotifications = getCookie('notification');
+      const notificationElement = document.querySelector('#notification');
+      if (savedNotifications) {
+        notificationElement.innerText = savedNotifications;
+      }
+    };
   </script>
 {% endblock %}
