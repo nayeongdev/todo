@@ -38,6 +38,10 @@ Django를 기반으로 websocket과 redis, celery를 사용해보는 데모 프�
    docker-compose up -d (V1.13.0 부턴 docker compose up -d)
 2. web 접속
    http://localhost:8000
+3. 계정 생성
+   python manage.py createsuperuser  
+4. 정적 파일 모음
+   python manage.py collectstatic
 ```
 
 ## 주요 기능
